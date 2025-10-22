@@ -1,0 +1,34 @@
+"""
+SlimeGobble - 游戏入口文件
+启动并运行游戏
+"""
+
+from game import Game
+
+
+def main():
+    """主函数"""
+    print("=" * 50)
+    print("欢迎来到 SlimeGobble!")
+    print("=" * 50)
+    print("\n控制说明:")
+    print("  W - 向上移动")
+    print("  A - 向左移动")
+    print("  S - 向下移动")
+    print("  D - 向右移动")
+    print("  P - 暂停/继续")
+    print("  ESC - 返回主菜单")
+    print("\n游戏目标:")
+    print("  收集金币达到500分即可进入下一关卡！")
+    print("=" * 50)
+    print()
+    
+    # 创建并运行游戏
+    game = Game()
+    game.run()
+    
+    print("\n感谢游玩 SlimeGobble!")
+
+
+if __name__ == "__main__":
+    main()
