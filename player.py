@@ -89,7 +89,35 @@ class Player:
         
         # 确保帧索引在范围内
         frame_index = int(self.current_frame) % len(frames)
-        frame_data = frames[frame_index]['frame']
+        
+        # 兼容不同的JSON格式
+        frame_item = frames[frame_index]
+        if isinstance(frame_item, dict):
+            # 格式1: {'frame': {'x': ..., 'y': ..., 'w': ..., 'h': ...}}
+            frame_data = frame_item.get('frame', frame_item)
+        else:
+            # 格式2: 直接是frame数据或其他格式
+            frame_data = frame_item
+        
+        # 兼容不同的JSON格式
+        frame_item = frames[frame_index]
+        if isinstance(frame_item, dict):
+            # 格式1: {'frame': {'x': ..., 'y': ..., 'w': ..., 'h': ...}}
+            frame_data = frame_item.get('frame', frame_item)
+        else:
+            # 格式2: 直接是frame数据或其他格式
+            frame_data = frame_item
+        
+        # 确保frame_data有必要的字段
+        if not isinstance(frame_data, dict) or 'x' not in frame_data:
+            # 无效格式，返回整个精灵图
+            sprite = self.sprites.get(self.direction)
+            if sprite:
+                return pygame.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
+            else:
+                surf = pygame.Surface((TILE_SIZE, TILE_SIZE))
+                surf.fill(GREEN)
+                return surf
         
         # 从精灵图中提取当前帧
         sprite_sheet = self.sprites[self.direction]
