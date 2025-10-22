@@ -74,9 +74,9 @@ class Player:
         """
         # 获取当前方向的动画数据
         anim_data = self.animations.get(self.direction, {})
-        frames = anim_data.get('frames', [])
+        frames_data = anim_data.get('frames', [])
         
-        if not frames:
+        if not frames_data:
             # 如果没有动画数据，返回整个精灵图
             sprite = self.sprites.get(self.direction)
             if sprite:
@@ -87,25 +87,43 @@ class Player:
                 surf.fill(GREEN)
                 return surf
         
+        # 兼容frames是字典或列表的情况
+        if isinstance(frames_data, dict):
+            # frames是字典: {"frame_0": {...}, "frame_1": {...}}
+            frames_list = list(frames_data.values())
+        elif isinstance(frames_data, list):
+            # frames是列表: [{...}, {...}]
+            frames_list = frames_data
+        else:
+            # 未知格式，返回整个精灵图
+            sprite = self.sprites.get(self.direction)
+            if sprite:
+                return pygame.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
+            else:
+                surf = pygame.Surface((TILE_SIZE, TILE_SIZE))
+                surf.fill(GREEN)
+                return surf
+        
+        if not frames_list:
+            # 空列表，返回整个精灵图
+            sprite = self.sprites.get(self.direction)
+            if sprite:
+                return pygame.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
+            else:
+                surf = pygame.Surface((TILE_SIZE, TILE_SIZE))
+                surf.fill(GREEN)
+                return surf
+        
         # 确保帧索引在范围内
-        frame_index = int(self.current_frame) % len(frames)
+        frame_index = int(self.current_frame) % len(frames_list)
         
-        # 兼容不同的JSON格式
-        frame_item = frames[frame_index]
+        # 获取帧数据
+        frame_item = frames_list[frame_index]
         if isinstance(frame_item, dict):
             # 格式1: {'frame': {'x': ..., 'y': ..., 'w': ..., 'h': ...}}
             frame_data = frame_item.get('frame', frame_item)
         else:
-            # 格式2: 直接是frame数据或其他格式
-            frame_data = frame_item
-        
-        # 兼容不同的JSON格式
-        frame_item = frames[frame_index]
-        if isinstance(frame_item, dict):
-            # 格式1: {'frame': {'x': ..., 'y': ..., 'w': ..., 'h': ...}}
-            frame_data = frame_item.get('frame', frame_item)
-        else:
-            # 格式2: 直接是frame数据或其他格式
+            # 格式2: 直接是frame数据
             frame_data = frame_item
         
         # 确保frame_data有必要的字段
