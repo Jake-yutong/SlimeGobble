@@ -51,7 +51,7 @@ class Enemy:
         self.rect = pygame.Rect(self.x, self.y, TILE_SIZE, TILE_SIZE)
     
     def load_assets(self):
-        """加载敌人的精灵图和动画数据"""
+        """加载敌人的精灵图（只需PNG，不需要JSON动画）"""
         # 文件名映射: front=下, back=上, left=左, right=右
         direction_files = {
             'front': 'Chaser front',  # 下
@@ -60,125 +60,47 @@ class Enemy:
             'right': 'Chaser right'   # 右
         }
         
-        print(f"\n=== 开始加载敌人资产 ===")
+        print(f"\n=== 加载敌人贴图 ===")
         print(f"资产路径: {ASSETS_PATH}")
         
         for direction, filename in direction_files.items():
-            # 加载PNG图像
+            # 只加载PNG图像（不需要JSON）
             sprite_path = os.path.join(ASSETS_PATH, f'{filename}.png')
-            json_path = os.path.join(ASSETS_PATH, f'{filename}.json')
-            
-            print(f"\n尝试加载方向 '{direction}':")
-            print(f"  PNG路径: {sprite_path}")
-            print(f"  JSON路径: {json_path}")
-            print(f"  PNG存在: {os.path.exists(sprite_path)}")
-            print(f"  JSON存在: {os.path.exists(json_path)}")
             
             try:
                 # 加载精灵图
                 sprite_sheet = pygame.image.load(sprite_path).convert_alpha()
                 self.sprites[direction] = sprite_sheet
-                
-                # 加载动画JSON数据
-                with open(json_path, 'r') as f:
-                    self.animations[direction] = json.load(f)
-                    
-                print(f"  ✓ 成功加载敌人资产: {filename}")
+                # 创建简单的静态"动画"（只有一帧）
+                self.animations[direction] = {'frames': []}
+                print(f"  ✓ 成功加载: {filename}.png")
             except Exception as e:
-                print(f"  ✗ 警告：无法加载敌人资产 {filename}: {e}")
-                print(f"     使用红色方块占位符")
-                # 如果加载失败，创建一个占位符表面（红色方块）
+                print(f"  ✗ 无法加载 {filename}.png: {e}")
+                # 如果加载失败，创建红色方块占位符
                 self.sprites[direction] = pygame.Surface((TILE_SIZE, TILE_SIZE))
                 self.sprites[direction].fill(RED)
                 self.animations[direction] = {'frames': []}
+        
+        print(f"===================\n")
     
     def get_current_sprite(self):
-        """获取当前帧的精灵图像"""
-        # 与Player类相同的逻辑
-        anim_data = self.animations.get(self.direction, {})
-        frames_data = anim_data.get('frames', [])
-        
-        if not frames_data:
-            sprite = self.sprites.get(self.direction)
-            if sprite:
-                return pygame.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
-            else:
-                surf = pygame.Surface((TILE_SIZE, TILE_SIZE))
-                surf.fill(RED)
-                return surf
-        
-        # 兼容frames是字典或列表
-        if isinstance(frames_data, dict):
-            frames_list = list(frames_data.values())
-        elif isinstance(frames_data, list):
-            frames_list = frames_data
+        """获取当前帧的精灵图像（静态图片，不需要动画）"""
+        sprite = self.sprites.get(self.direction)
+        if sprite:
+            # 直接缩放到TILE_SIZE并返回
+            return pygame.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
         else:
-            sprite = self.sprites.get(self.direction)
-            if sprite:
-                return pygame.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
-            else:
-                surf = pygame.Surface((TILE_SIZE, TILE_SIZE))
-                surf.fill(RED)
-                return surf
-        
-        if not frames_list:
-            sprite = self.sprites.get(self.direction)
-            if sprite:
-                return pygame.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
-            else:
-                surf = pygame.Surface((TILE_SIZE, TILE_SIZE))
-                surf.fill(RED)
-                return surf
-        
-        frame_index = int(self.current_frame) % len(frames_list)
-        frame_item = frames_list[frame_index]
-        
-        if isinstance(frame_item, dict):
-            frame_data = frame_item.get('frame', frame_item)
-        else:
-            frame_data = frame_item
-        
-        if not isinstance(frame_data, dict) or 'x' not in frame_data:
-            sprite = self.sprites.get(self.direction)
-            if sprite:
-                return pygame.transform.scale(sprite, (TILE_SIZE, TILE_SIZE))
-            else:
-                surf = pygame.Surface((TILE_SIZE, TILE_SIZE))
-                surf.fill(RED)
-                return surf
-        
-        sprite_sheet = self.sprites[self.direction]
-        frame_rect = pygame.Rect(
-            frame_data['x'],
-            frame_data['y'],
-            frame_data['w'],
-            frame_data['h']
-        )
-        
-        frame_surface = pygame.Surface((frame_data['w'], frame_data['h']), pygame.SRCALPHA)
-        frame_surface.blit(sprite_sheet, (0, 0), frame_rect)
+            # 如果没有加载成功，返回红色方块
+            surf = pygame.Surface((TILE_SIZE, TILE_SIZE))
+            surf.fill(RED)
+            return surf
         
         return pygame.transform.scale(frame_surface, (TILE_SIZE, TILE_SIZE))
     
     def update_animation(self):
-        """更新动画帧"""
-        if self.moving:
-            anim_data = self.animations.get(self.direction, {})
-            frames_data = anim_data.get('frames', [])
-            
-            if isinstance(frames_data, dict):
-                frames = list(frames_data.values())
-            else:
-                frames = frames_data
-            
-            if frames:
-                self.animation_counter += self.animation_speed
-                if self.animation_counter >= 1:
-                    self.animation_counter = 0
-                    self.current_frame = (self.current_frame + 1) % len(frames)
-        else:
-            self.current_frame = 0
-            self.animation_counter = 0
+        """更新动画帧（敌人使用静态图片，此方法保留但不需要复杂逻辑）"""
+        # 敌人使用静态PNG图片，不需要帧动画
+        pass
     
     def check_collision(self, rect, level_map):
         """检查碰撞"""

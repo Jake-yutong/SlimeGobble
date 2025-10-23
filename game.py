@@ -251,12 +251,11 @@ class Game:
             print(f"收集大金币！得分: {self.score}")
     
     def check_level_complete(self):
-        """检查关卡是否完成（收集完所有金币）"""
-        # 检查是否收集完所有金币和大金币
-        if len(self.coins) == 0 and len(self.big_coins) == 0:
+        """检查关卡是否完成（达到500分）"""
+        if self.score >= LEVEL_UP_SCORE:
             self.state = LEVEL_COMPLETE
             self.play_sound('win')  # 播放胜利音效
-            print(f"关卡 {self.current_level + 1} 完成！所有金币已收集！")
+            print(f"关卡 {self.current_level + 1} 完成！得分: {self.score}")
     
     def check_enemy_collision(self):
         """检查玩家与敌人的碰撞"""
