@@ -24,3 +24,4 @@ Thumbs.db
 # Game specific
 assets/
 *.log
+build/
