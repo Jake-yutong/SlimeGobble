@@ -4,7 +4,6 @@ SlimeGobble - 游戏入口文件
 """
 
 import asyncio
-import platform
 from game import Game
 
 
@@ -34,42 +33,5 @@ async def main():
     print("\n感谢游玩 SlimeGobble!")
 
 
-if __name__ == '__main__':
-    # 检测是否在Web环境中运行
-    if platform.system() == "Emscripten":
-        # Web环境 - 使用asyncio
-        asyncio.run(main())
-    else:
-        # 桌面环境 - 使用同步版本
-        game = Game()
-        game.run()
-
-from game import Game
-
-
-def main():
-    """主函数"""
-    print("=" * 50)
-    print("欢迎来到 SlimeGobble!")
-    print("=" * 50)
-    print("\n控制说明:")
-    print("  W - 向上移动")
-    print("  A - 向左移动")
-    print("  S - 向下移动")
-    print("  D - 向右移动")
-    print("  P - 暂停/继续")
-    print("  ESC - 返回主菜单")
-    print("\n游戏目标:")
-    print("  收集金币达到500分即可进入下一关卡！")
-    print("=" * 50)
-    print()
-    
-    # 创建并运行游戏
-    game = Game()
-    game.run()
-    
-    print("\n感谢游玩 SlimeGobble!")
-
-
-if __name__ == "__main__":
-    main()
+# Pygbag 需要在顶层调用
+asyncio.run(main())
