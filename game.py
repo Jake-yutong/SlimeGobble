@@ -183,25 +183,36 @@ class Game:
         self.enemies = []
         # 根据关卡确定AI模式和速度
         if level_index == 0:
+            # 关卡1: 1个敌人, 随机移动
             ai_mode = 'random'
             speed = ENEMY_SPEED_LEVEL1
+            num_enemies = min(1, len(self.enemy_spawns))  # 只使用第一个敌人出生点
         elif level_index == 1:
+            # 关卡2: 2个敌人, 追逐模式
             ai_mode = 'chase'
             speed = ENEMY_SPEED_LEVEL2
+            num_enemies = min(2, len(self.enemy_spawns))  # 使用前2个敌人出生点
         else:
+            # 关卡3: 3个敌人, 快速追逐模式
             ai_mode = 'fast_chase'
             speed = ENEMY_SPEED_LEVEL3
+            num_enemies = len(self.enemy_spawns)  # 使用所有敌人出生点
         
-        for spawn_x, spawn_y in self.enemy_spawns:
-            enemy = Enemy(spawn_x, spawn_y, ai_mode, speed)
-            self.enemies.append(enemy)
+        # 创建指定数量的敌人
+        for i in range(num_enemies):
+            if i < len(self.enemy_spawns):
+                spawn_x, spawn_y = self.enemy_spawns[i]
+                enemy = Enemy(spawn_x, spawn_y, ai_mode, speed)
+                self.enemies.append(enemy)
         
-        print(f"关卡 {level_index + 1} 加载完成")
+        print(f"\n=== 关卡 {level_index + 1} 加载完成 ===")
         print(f"  金币数量: {len(self.coins)}")
         print(f"  大金币数量: {len(self.big_coins)}")
-        print(f"  敌人出生点数量: {len(self.enemy_spawns)}")
-        print(f"  敌人数量: {len(self.enemies)}")
+        print(f"  敌人出生点总数: {len(self.enemy_spawns)}")
+        print(f"  实际创建敌人数: {len(self.enemies)}")
         print(f"  敌人AI模式: {ai_mode}")
+        print(f"  敌人速度: {speed}")
+        print(f"=============================\n")
     
     def start_game(self):
         """开始游戏"""
@@ -240,11 +251,12 @@ class Game:
             print(f"收集大金币！得分: {self.score}")
     
     def check_level_complete(self):
-        """检查关卡是否完成"""
-        if self.score >= LEVEL_UP_SCORE:
+        """检查关卡是否完成（收集完所有金币）"""
+        # 检查是否收集完所有金币和大金币
+        if len(self.coins) == 0 and len(self.big_coins) == 0:
             self.state = LEVEL_COMPLETE
             self.play_sound('win')  # 播放胜利音效
-            print(f"关卡 {self.current_level + 1} 完成！")
+            print(f"关卡 {self.current_level + 1} 完成！所有金币已收集！")
     
     def check_enemy_collision(self):
         """检查玩家与敌人的碰撞"""

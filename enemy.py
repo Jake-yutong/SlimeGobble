@@ -60,10 +60,19 @@ class Enemy:
             'right': 'Chaser right'   # 右
         }
         
+        print(f"\n=== 开始加载敌人资产 ===")
+        print(f"资产路径: {ASSETS_PATH}")
+        
         for direction, filename in direction_files.items():
             # 加载PNG图像
             sprite_path = os.path.join(ASSETS_PATH, f'{filename}.png')
             json_path = os.path.join(ASSETS_PATH, f'{filename}.json')
+            
+            print(f"\n尝试加载方向 '{direction}':")
+            print(f"  PNG路径: {sprite_path}")
+            print(f"  JSON路径: {json_path}")
+            print(f"  PNG存在: {os.path.exists(sprite_path)}")
+            print(f"  JSON存在: {os.path.exists(json_path)}")
             
             try:
                 # 加载精灵图
@@ -74,9 +83,10 @@ class Enemy:
                 with open(json_path, 'r') as f:
                     self.animations[direction] = json.load(f)
                     
-                print(f"成功加载敌人资产: {filename}")
+                print(f"  ✓ 成功加载敌人资产: {filename}")
             except Exception as e:
-                print(f"警告：无法加载敌人资产 {filename}: {e}")
+                print(f"  ✗ 警告：无法加载敌人资产 {filename}: {e}")
+                print(f"     使用红色方块占位符")
                 # 如果加载失败，创建一个占位符表面（红色方块）
                 self.sprites[direction] = pygame.Surface((TILE_SIZE, TILE_SIZE))
                 self.sprites[direction].fill(RED)
