@@ -52,12 +52,18 @@ class Enemy:
     
     def load_assets(self):
         """加载敌人的精灵图和动画数据"""
-        directions = ['front', 'back', 'left', 'right']
+        # 文件名映射: front=下, back=上, left=左, right=右
+        direction_files = {
+            'front': 'Chaser front',  # 下
+            'back': 'Chaser back',    # 上
+            'left': 'Chaser left',    # 左
+            'right': 'Chaser right'   # 右
+        }
         
-        for direction in directions:
+        for direction, filename in direction_files.items():
             # 加载PNG图像
-            sprite_path = os.path.join(ASSETS_PATH, f'Chaser {direction}.png')
-            json_path = os.path.join(ASSETS_PATH, f'Chaser {direction}.json')
+            sprite_path = os.path.join(ASSETS_PATH, f'{filename}.png')
+            json_path = os.path.join(ASSETS_PATH, f'{filename}.json')
             
             try:
                 # 加载精灵图
@@ -68,9 +74,9 @@ class Enemy:
                 with open(json_path, 'r') as f:
                     self.animations[direction] = json.load(f)
                     
-                print(f"成功加载敌人资产: Chaser {direction}")
+                print(f"成功加载敌人资产: {filename}")
             except Exception as e:
-                print(f"警告：无法加载敌人资产 {direction}: {e}")
+                print(f"警告：无法加载敌人资产 {filename}: {e}")
                 # 如果加载失败，创建一个占位符表面（红色方块）
                 self.sprites[direction] = pygame.Surface((TILE_SIZE, TILE_SIZE))
                 self.sprites[direction].fill(RED)

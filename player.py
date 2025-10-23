@@ -222,12 +222,21 @@ class Player:
         Returns:
             bool: 如果发生碰撞返回True，否则返回False
         """
+        # 缩小碰撞箱，减少卡墙问题
+        margin = 2  # 2像素的容错边距
+        test_rect = pygame.Rect(
+            rect.left + margin,
+            rect.top + margin,
+            rect.width - margin * 2,
+            rect.height - margin * 2
+        )
+        
         # 获取矩形四个角对应的网格坐标
         corners = [
-            (rect.left, rect.top),
-            (rect.right - 1, rect.top),
-            (rect.left, rect.bottom - 1),
-            (rect.right - 1, rect.bottom - 1)
+            (test_rect.left, test_rect.top),
+            (test_rect.right - 1, test_rect.top),
+            (test_rect.left, test_rect.bottom - 1),
+            (test_rect.right - 1, test_rect.bottom - 1)
         ]
         
         for corner_x, corner_y in corners:
