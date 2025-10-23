@@ -491,11 +491,12 @@ class Game:
                 # 关卡完成后按空格继续
                 if event.key == pygame.K_SPACE and self.state == LEVEL_COMPLETE:
                     if self.current_level < len(LEVELS) - 1:
-                        # 进入下一关
+                        # 进入下一关 - 重置分数但保留生命值
                         self.current_level += 1
+                        self.score = 0  # 重置分数，每关重新计算
                         self.load_level(self.current_level)
                         self.state = PLAYING
-                        print(f"进入关卡 {self.current_level + 1}")
+                        print(f"进入关卡 {self.current_level + 1}，分数重置为0")
                     else:
                         # 已完成所有关卡
                         self.state = VICTORY
