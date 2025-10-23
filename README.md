@@ -1,4 +1,4 @@
-# 🎮 SlimeGobble - 史莱姆大冒险
+# 🎮 SlimeGobble
 
 <div align="center">
 
@@ -7,42 +7,42 @@
 [![Pygame](https://img.shields.io/badge/Pygame-2.6.1-green?style=flat-square)](https://www.pygame.org/)
 [![License](https://img.shields.io/badge/License-Educational-orange?style=flat-square)](LICENSE)
 
-**一款基于 Pygame 开发的吃豆人风格游戏，包含 3 个关卡、AI 敌人、动画系统和完整的音效**
+**A Pac-Man inspired game built with Pygame, featuring 3 levels, intelligent AI enemies, frame-based animations, and complete sound effects**
 
-[🎮 立即开始游玩](#-在线游玩) • [📖 查看文档](#-项目结构) • [🚀 本地运行](#-本地运行)
+[🎮 Play Now](#-play-online) • [📖 Documentation](#-project-structure) • [🚀 Local Setup](#-local-setup)
 
 </div>
 
 ---
 
-## 🌐 在线游玩
+## 🌐 Play Online
 
-**🎮 [点击这里在浏览器中游玩](https://jake-yutong.github.io/SlimeGobble/)**
+**🎮 [Click here to play in your browser](https://jake-yutong.github.io/SlimeGobble/)**
 
-无需安装，打开即玩！支持所有现代浏览器（Chrome、Firefox、Safari、Edge）。
+No installation required! Works on all modern browsers (Chrome, Firefox, Safari, Edge).
 
-## 🚀 本地运行
+## 🚀 Local Setup
 
-想在本地电脑上运行？只需三步：
+Want to run the game locally? Just three steps:
 
 ```bash
-# 1. 克隆仓库
+# 1. Clone the repository
 git clone https://github.com/Jake-yutong/SlimeGobble.git
 cd SlimeGobble
 
-# 2. 创建虚拟环境并安装依赖
+# 2. Create virtual environment and install dependencies
 python3 -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install pygame numpy
 
-# 3. 启动游戏
+# 3. Start the game
 python main.py
 ```
 
-### 系统要求
-- Python 3.12 或更高版本
+### System Requirements
+- Python 3.12 or higher
 - macOS / Windows / Linux
-- 支持 Pygame 的图形环境
+- Graphics environment supporting Pygame
 
 ## 🎯 Controls
 
@@ -55,105 +55,105 @@ python main.py
 | P | Pause/Resume |
 | ESC | Return to Main Menu |
 
-## 🎮 游戏玩法
+## 🎮 Gameplay
 
-### 游戏目标
-控制可爱的史莱姆 "Mumu" 收集金币，达到 500 分即可进入下一关！
+### Objective
+Control the cute slime "Mumu" to collect coins and reach 500 points to advance to the next level!
 
-### 游戏元素
-- 🪙 **小金币**：10 分
-- 💰 **大金币**：50 分
-- 👻 **追逐者（Chaser）**：碰到会失去 1 条生命
-- ❤️ **生命系统**：3 条生命，用完游戏结束
+### Game Elements
+- 🪙 **Small Coin**: 10 points
+- 💰 **Big Coin**: 50 points
+- 👻 **Chaser**: Touching one costs 1 life
+- ❤️ **Life System**: 3 lives total, game over when depleted
 
-### 关卡设计
-- **第一关**：2 个 Random 敌人（随机移动）
-- **第二关**：2 个 Chase 敌人（追踪玩家）+ 1 个 Fast Chase（快速追踪）
-- **第三关**：3 个 Fast Chase 敌人（终极挑战！）
+### Level Design
+- **Level 1**: 2 Random enemies (random movement)
+- **Level 2**: 2 Chase enemies (track player) + 1 Fast Chase (rapid tracking)
+- **Level 3**: 3 Fast Chase enemies (ultimate challenge!)
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
 SlimeGobble/
-├── 📄 核心代码
-│   ├── main.py          # 游戏入口（支持 Web 异步）
-│   ├── game.py          # 游戏主逻辑和状态管理
-│   ├── player.py        # 玩家角色类（动画系统）
-│   ├── enemy.py         # 敌人 AI 系统（3种行为模式）
-│   └── config.py        # 游戏配置和关卡地图
+├── 📄 Core Code
+│   ├── main.py          # Game entry point (Web async support)
+│   ├── game.py          # Main game logic and state management
+│   ├── player.py        # Player character class (animation system)
+│   ├── enemy.py         # Enemy AI system (3 behavior modes)
+│   └── config.py        # Game configuration and level maps
 │
-├── 🎨 游戏素材
-│   └── assets/          # 精灵图、音效、JSON 动画文件
-│       ├── slime *.png/json    # 玩家动画（4方向）
-│       ├── Chaser *.png        # 敌人图像（4方向）
+├── 🎨 Game Assets
+│   └── assets/          # Sprites, sounds, JSON animation files
+│       ├── slime *.png/json    # Player animations (4 directions)
+│       ├── Chaser *.png        # Enemy sprites (4 directions)
 │       ├── coin.png, big coin.png
-│       └── *.wav               # 背景音乐和音效
+│       └── *.wav               # Background music and sound effects
 │
-├── 🚀 部署相关
-│   ├── deploy_web.sh    # 自动化部署脚本
+├── 🚀 Deployment
+│   ├── deploy_web.sh    # Automated deployment script
 │   ├── build_executable.sh
 │   └── WEB_DEPLOYMENT.md
 │
-├── 📚 文档
-│   ├── README.md        # 本文件
-│   ├── DEVELOPMENT.md   # 开发文档
-│   ├── SUBMISSION.md    # 作业提交说明
+├── 📚 Documentation
+│   ├── README.md        # This file
+│   ├── DEVELOPMENT.md   # Development documentation
+│   ├── SUBMISSION.md    # Assignment submission guide
 │   └── PHASE1_SUMMARY.md
 │
-└── 🧪 测试
-    └── test_phase1.py   # 自动化测试
+└── 🧪 Testing
+    └── test_phase1.py   # Automated tests
 ```
 
-## ✨ 技术特性
+## ✨ Technical Features
 
-### 核心系统
-- 🎯 **完整的游戏状态机**：主菜单、游戏中、暂停、胜利、失败
-- 🎨 **帧动画系统**：基于 JSON 配置的精灵动画
-- 🤖 **智能敌人 AI**：三种行为模式（随机、追踪、快速追踪）
-- 🎵 **音效系统**：背景音乐、金币收集、胜利/失败音效
-- 💾 **关卡系统**：3 个关卡，难度递增
+### Core Systems
+- 🎯 **Complete State Machine**: Main menu, gameplay, pause, victory, game over
+- 🎨 **Frame Animation System**: JSON-based sprite animations
+- 🤖 **Intelligent Enemy AI**: Three behavior modes (random, chase, fast chase)
+- 🎵 **Sound System**: Background music, coin collection, victory/defeat sounds
+- 💾 **Level System**: 3 levels with progressive difficulty
 
-### Web 部署
-- 🌐 **WebAssembly 转换**：使用 Pygbag 转换为浏览器可运行版本
-- 📦 **GitHub Pages 托管**：免费、稳定、全球 CDN 加速
-- ⚡ **异步游戏循环**：专为浏览器优化的事件循环
+### Web Deployment
+- 🌐 **WebAssembly Conversion**: Using Pygbag to convert to browser-playable version
+- 📦 **GitHub Pages Hosting**: Free, stable, global CDN acceleration
+- ⚡ **Async Game Loop**: Event loop optimized for browsers
 
-## 📊 开发历程
+## 📊 Development Timeline
 
-| 阶段 | 状态 | 内容 |
-|------|------|------|
-| **Phase 1** | ✅ 完成 | 游戏框架、玩家控制、关卡 1 |
-| **Phase 2** | ✅ 完成 | 敌人 AI、生命系统、音效、完整 3 关 |
-| **Web 部署** | ✅ 完成 | Pygbag 转换、GitHub Pages 上线 |
+| Phase | Status | Content |
+|-------|--------|---------|
+| **Phase 1** | ✅ Complete | Game framework, player control, level 1 |
+| **Phase 2** | ✅ Complete | Enemy AI, life system, sound effects, 3 complete levels |
+| **Web Deployment** | ✅ Complete | Pygbag conversion, GitHub Pages live |
 
-## 📚 相关文档
+## 📚 Documentation
 
-- 📖 [开发文档 (DEVELOPMENT.md)](DEVELOPMENT.md) - 技术实现细节
-- 📝 [作业提交说明 (SUBMISSION.md)](SUBMISSION.md) - 完整提交材料
-- 🚀 [Web 部署指南 (WEB_DEPLOYMENT.md)](WEB_DEPLOYMENT.md) - 部署教程
-- 📋 [Phase 1 总结 (PHASE1_SUMMARY.md)](PHASE1_SUMMARY.md) - 第一阶段报告
+- 📖 [Development Guide (DEVELOPMENT.md)](DEVELOPMENT.md) - Technical implementation details
+- 📝 [Submission Guide (SUBMISSION.md)](SUBMISSION.md) - Complete submission materials
+- 🚀 [Web Deployment Guide (WEB_DEPLOYMENT.md)](WEB_DEPLOYMENT.md) - Deployment tutorial
+- 📋 [Phase 1 Summary (PHASE1_SUMMARY.md)](PHASE1_SUMMARY.md) - First phase report
 
-## 🧪 测试
+## 🧪 Testing
 
-运行自动化测试验证实现：
+Run automated tests to verify implementation:
 
 ```bash
 python test_phase1.py
 ```
 
-## 🤝 作者
+## 🤝 Author
 
 **Jake Yutong** - [@Jake-yutong](https://github.com/Jake-yutong)
 
-## 📝 许可证
+## 📝 License
 
-本项目仅用于教育目的。
+This project is for educational purposes only.
 
 ---
 
 <div align="center">
 
-**🎮 [立即开始游玩](https://jake-yutong.github.io/SlimeGobble/) • 收集金币，躲避追逐者！**
+**🎮 [Play Now](https://jake-yutong.github.io/SlimeGobble/) • Collect coins and avoid the chasers!**
 
 Made with ❤️ using Python & Pygame
 

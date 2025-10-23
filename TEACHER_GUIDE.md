@@ -1,160 +1,160 @@
-# 👨‍🏫 教师评审指南
+# 👨‍🏫 Teacher Evaluation Guide
 
-## 🎮 快速试玩
+## 🎮 Quick Play
 
-**在线游玩链接：** https://jake-yutong.github.io/SlimeGobble/
+**Online Play Link:** https://jake-yutong.github.io/SlimeGobble/
 
-- ✅ 无需安装，打开即玩
-- ✅ 支持所有现代浏览器
-- ✅ 完整游戏体验（3 个关卡）
+- ✅ No installation required, play immediately
+- ✅ Works on all modern browsers
+- ✅ Complete game experience (3 levels)
 
-**操作说明：**
-- **WASD** - 移动
-- **P** - 暂停
-- **ESC** - 返回主菜单
+**Controls:**
+- **WASD** - Movement
+- **P** - Pause
+- **ESC** - Return to main menu
 
 ---
 
-## 📂 源码查看
+## 📂 Source Code Review
 
-**GitHub 仓库：** https://github.com/Jake-yutong/SlimeGobble
+**GitHub Repository:** https://github.com/Jake-yutong/SlimeGobble
 
-### 核心代码文件
-点击下方链接直接查看源码：
+### Core Code Files
+Click the links below to view source code directly:
 
-1. **[main.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/main.py)** - 游戏入口（40 行）
-   - Web 异步支持
+1. **[main.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/main.py)** - Game entry point (40 lines)
+   - Web async support
    
-2. **[game.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/game.py)** - 游戏主逻辑（560 行）
-   - 状态机管理（6 个状态）
-   - 关卡系统
-   - 碰撞检测
-   - HUD 显示
+2. **[game.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/game.py)** - Main game logic (560 lines)
+   - State machine management (6 states)
+   - Level system
+   - Collision detection
+   - HUD display
    
-3. **[player.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/player.py)** - 玩家控制（280 行）
-   - 帧动画系统
-   - 移动逻辑
-   - 自动对齐
+3. **[player.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/player.py)** - Player control (280 lines)
+   - Frame animation system
+   - Movement logic
+   - Auto-alignment
    
-4. **[enemy.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/enemy.py)** - 敌人 AI（290 行）
-   - Random AI（随机移动）
-   - Chase AI（追踪玩家）
-   - Fast Chase AI（快速追踪）
+4. **[enemy.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/enemy.py)** - Enemy AI (290 lines)
+   - Random AI (random movement)
+   - Chase AI (track player)
+   - Fast Chase AI (rapid tracking)
    
-5. **[config.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/config.py)** - 游戏配置（150 行）
-   - 3 个关卡地图定义
-   - 游戏参数配置
+5. **[config.py](https://github.com/Jake-yutong/SlimeGobble/blob/main/config.py)** - Game configuration (150 lines)
+   - 3 level map definitions
+   - Game parameter configuration
 
-### 游戏素材
-- **[assets/](https://github.com/Jake-yutong/SlimeGobble/tree/main/assets)** - 20 个素材文件
-  - 玩家动画（4 方向，8 帧）
-  - 敌人图像（4 方向）
-  - 音效文件（BGM、金币、胜利/失败）
-
----
-
-## 📊 项目统计
-
-| 指标 | 数值 |
-|------|------|
-| **总代码行数** | 1,320 行 |
-| **核心文件数** | 5 个 |
-| **游戏素材** | 20 个文件 |
-| **关卡数量** | 3 关 |
-| **AI 类型** | 3 种 |
-| **测试覆盖** | 基础测试完成 |
+### Game Assets
+- **[assets/](https://github.com/Jake-yutong/SlimeGobble/tree/main/assets)** - 20 asset files
+  - Player animations (4 directions, 8 frames)
+  - Enemy sprites (4 directions)
+  - Sound effects (BGM, coins, victory/defeat)
 
 ---
 
-## ✨ 技术亮点
+## 📊 Project Statistics
 
-### 1. 完整的游戏系统
-- ✅ 状态机管理（主菜单、游戏中、暂停、胜利、失败）
-- ✅ 3 个关卡，难度递增
-- ✅ 生命系统和得分系统
-- ✅ HUD 界面显示
-
-### 2. 智能 AI 系统
-- ✅ 3 种敌人行为模式
-- ✅ 曼哈顿距离算法追踪
-- ✅ 混合策略（游荡+追击）
-
-### 3. 动画与音效
-- ✅ 基于 JSON 的帧动画系统
-- ✅ 4 方向动画切换
-- ✅ 完整的音效系统
-
-### 4. Web 部署
-- ✅ Pygbag 转换为 WebAssembly
-- ✅ GitHub Pages 托管
-- ✅ 长期有效的在线访问
+| Metric | Value |
+|--------|-------|
+| **Total Lines of Code** | 1,320 lines |
+| **Core Files** | 5 files |
+| **Game Assets** | 20 files |
+| **Number of Levels** | 3 |
+| **AI Types** | 3 modes |
+| **Test Coverage** | Basic tests complete |
 
 ---
 
-## 📝 评审建议
+## ✨ Technical Highlights
 
-### 代码质量
-- ✅ 模块化设计（MVC 架构）
-- ✅ 清晰的注释和文档
-- ✅ 一致的代码风格
-- ✅ 异常处理
+### 1. Complete Game System
+- ✅ State machine management (main menu, gameplay, pause, victory, defeat)
+- ✅ 3 levels with progressive difficulty
+- ✅ Life system and scoring system
+- ✅ HUD interface display
 
-### 游戏设计
-- ✅ 渐进式难度曲线
-- ✅ 流畅的操作体验
-- ✅ 完整的反馈系统
-- ✅ 友好的用户界面
+### 2. Intelligent AI System
+- ✅ 3 enemy behavior modes
+- ✅ Manhattan distance tracking algorithm
+- ✅ Hybrid strategy (wander + chase)
 
-### 创新点
-- ✅ Web 部署（超出基本要求）
-- ✅ 3 种 AI 行为模式
-- ✅ 帧动画系统
-- ✅ 完整的音效系统
+### 3. Animation & Sound
+- ✅ JSON-based frame animation system
+- ✅ 4-directional animation switching
+- ✅ Complete sound system
 
----
-
-## 📚 相关文档
-
-- **[README.md](https://github.com/Jake-yutong/SlimeGobble/blob/main/README.md)** - 项目主文档
-- **[SUBMISSION.md](https://github.com/Jake-yutong/SlimeGobble/blob/main/SUBMISSION.md)** - 详细提交说明
-- **[DEVELOPMENT.md](https://github.com/Jake-yutong/SlimeGobble/blob/main/DEVELOPMENT.md)** - 开发文档
+### 4. Web Deployment
+- ✅ Pygbag conversion to WebAssembly
+- ✅ GitHub Pages hosting
+- ✅ Permanently accessible online
 
 ---
 
-## ⏱️ 建议评审流程
+## 📝 Evaluation Suggestions
 
-1. **试玩游戏（5 分钟）**
-   - 打开 https://jake-yutong.github.io/SlimeGobble/
-   - 完成至少 1 个关卡
-   - 体验 AI 行为和游戏机制
+### Code Quality
+- ✅ Modular design (MVC architecture)
+- ✅ Clear comments and documentation
+- ✅ Consistent code style
+- ✅ Exception handling
 
-2. **查看核心代码（10 分钟）**
-   - 浏览 game.py 的状态机实现
-   - 查看 enemy.py 的 AI 算法
-   - 检查代码质量和注释
+### Game Design
+- ✅ Progressive difficulty curve
+- ✅ Smooth gameplay experience
+- ✅ Complete feedback system
+- ✅ User-friendly interface
 
-3. **评估项目完成度（5 分钟）**
-   - 功能完整性
-   - 代码质量
-   - 文档完善度
-   - 创新点
-
-**总计：约 20 分钟完成评审**
+### Innovation Points
+- ✅ Web deployment (exceeds basic requirements)
+- ✅ 3 AI behavior modes
+- ✅ Frame animation system
+- ✅ Complete sound system
 
 ---
 
-## 📧 联系方式
+## 📚 Related Documentation
 
-**学生：** Jake Yutong  
-**GitHub：** [@Jake-yutong](https://github.com/Jake-yutong)  
-**项目仓库：** https://github.com/Jake-yutong/SlimeGobble
+- **[README.md](https://github.com/Jake-yutong/SlimeGobble/blob/main/README.md)** - Project main documentation
+- **[SUBMISSION.md](https://github.com/Jake-yutong/SlimeGobble/blob/main/SUBMISSION.md)** - Detailed submission guide
+- **[DEVELOPMENT.md](https://github.com/Jake-yutong/SlimeGobble/blob/main/DEVELOPMENT.md)** - Development documentation
+
+---
+
+## ⏱️ Suggested Evaluation Process
+
+1. **Play the Game (5 minutes)**
+   - Open https://jake-yutong.github.io/SlimeGobble/
+   - Complete at least 1 level
+   - Experience AI behavior and game mechanics
+
+2. **Review Core Code (10 minutes)**
+   - Browse game.py state machine implementation
+   - Review enemy.py AI algorithms
+   - Check code quality and comments
+
+3. **Evaluate Project Completeness (5 minutes)**
+   - Functionality completeness
+   - Code quality
+   - Documentation quality
+   - Innovation points
+
+**Total: Approximately 20 minutes for complete evaluation**
+
+---
+
+## 📧 Contact
+
+**Student:** Jake Yutong  
+**GitHub:** [@Jake-yutong](https://github.com/Jake-yutong)  
+**Project Repository:** https://github.com/Jake-yutong/SlimeGobble
 
 ---
 
 <div align="center">
 
-**感谢您的评审！**
+**Thank you for your evaluation!**
 
-🎮 [立即游玩](https://jake-yutong.github.io/SlimeGobble/) | 📂 [查看源码](https://github.com/Jake-yutong/SlimeGobble)
+🎮 [Play Now](https://jake-yutong.github.io/SlimeGobble/) | 📂 [View Source](https://github.com/Jake-yutong/SlimeGobble)
 
 </div>
