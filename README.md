@@ -21,6 +21,28 @@
 
 No installation required! Works on all modern browsers (Chrome, Firefox, Safari, Edge).
 
+---
+
+## 🖼️ Screenshots
+
+<div align="center">
+
+### Level 1 - Beginner Stage
+![Level 1](screenshots/level1.png)
+
+### Level 2 - Intermediate Challenge
+![Level 2](screenshots/level2.png)
+
+### Level 3 - Ultimate Challenge
+![Level 3](screenshots/level3.png)
+
+### Victory Screen
+![Victory](screenshots/victory.png)
+
+</div>
+
+---
+
 ## 🚀 Local Setup
 
 Want to run the game locally? Just three steps:
