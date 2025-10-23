@@ -43,6 +43,8 @@ class Enemy:
         # AI相关
         self.direction_change_timer = 0  # 随机AI的方向切换计时器
         self.direction_change_interval = 60  # 每60帧切换一次方向
+        self.chase_update_timer = 0  # 追逐AI的更新计时器
+        self.chase_update_interval = 20 if ai_mode == 'chase' else 10  # chase模式每20帧更新一次路径，fast_chase每10帧
         
         # 加载敌人资产
         self.load_assets()
@@ -180,32 +182,48 @@ class Enemy:
         self.moving = moved
     
     def move_chase(self, player, level_map):
-        """追踪玩家AI"""
-        # 计算到玩家的方向
-        dx = player.x - self.x
-        dy = player.y - self.y
+        """追踪玩家AI（有思考延迟）"""
+        # 更新追踪计时器
+        self.chase_update_timer += 1
         
-        # 选择优先移动方向（曼哈顿距离）
-        if abs(dx) > abs(dy):
-            # 优先水平移动
-            if dx > 0:
-                self.direction = 'right'
-                test_x = self.x + self.speed
-                test_y = self.y
+        # 只在特定帧数更新追踪方向（不是每帧都追）
+        if self.chase_update_timer >= self.chase_update_interval:
+            self.chase_update_timer = 0
+            
+            # 计算到玩家的方向
+            dx = player.x - self.x
+            dy = player.y - self.y
+            
+            # 选择优先移动方向（曼哈顿距离）
+            if abs(dx) > abs(dy):
+                # 优先水平移动
+                if dx > 0:
+                    self.target_direction = 'right'
+                else:
+                    self.target_direction = 'left'
             else:
-                self.direction = 'left'
-                test_x = self.x - self.speed
-                test_y = self.y
-        else:
-            # 优先垂直移动
-            if dy > 0:
-                self.direction = 'front'
-                test_x = self.x
-                test_y = self.y + self.speed
-            else:
-                self.direction = 'back'
-                test_x = self.x
-                test_y = self.y - self.speed
+                # 优先垂直移动
+                if dy > 0:
+                    self.target_direction = 'front'
+                else:
+                    self.target_direction = 'back'
+        
+        # 使用目标方向（如果还没设置，先设置）
+        if not hasattr(self, 'target_direction'):
+            self.target_direction = self.direction
+        
+        self.direction = self.target_direction
+        
+        # 计算移动
+        test_x, test_y = self.x, self.y
+        if self.direction == 'right':
+            test_x = self.x + self.speed
+        elif self.direction == 'left':
+            test_x = self.x - self.speed
+        elif self.direction == 'front':
+            test_y = self.y + self.speed
+        elif self.direction == 'back':
+            test_y = self.y - self.speed
         
         # 尝试移动
         test_rect = pygame.Rect(test_x, test_y, TILE_SIZE, TILE_SIZE)
@@ -216,35 +234,10 @@ class Enemy:
             self.rect.y = self.y
             self.moving = True
         else:
-            # 如果主方向被挡，尝试另一个方向
-            if abs(dx) > abs(dy):
-                # 尝试垂直移动
-                if dy > 0:
-                    self.direction = 'front'
-                    test_y = self.y + self.speed
-                else:
-                    self.direction = 'back'
-                    test_y = self.y - self.speed
-                test_x = self.x
-            else:
-                # 尝试水平移动
-                if dx > 0:
-                    self.direction = 'right'
-                    test_x = self.x + self.speed
-                else:
-                    self.direction = 'left'
-                    test_x = self.x - self.speed
-                test_y = self.y
-            
-            test_rect = pygame.Rect(test_x, test_y, TILE_SIZE, TILE_SIZE)
-            if not self.check_collision(test_rect, level_map):
-                self.x = test_x
-                self.y = test_y
-                self.rect.x = self.x
-                self.rect.y = self.y
-                self.moving = True
-            else:
-                self.moving = False
+            # 如果被挡，尝试转向（简单处理，随机选个其他方向）
+            self.moving = False
+            # 重新计算路径
+            self.chase_update_timer = self.chase_update_interval
     
     def update(self, player, level_map):
         """更新敌人状态"""
