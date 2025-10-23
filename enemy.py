@@ -30,8 +30,9 @@ class Enemy:
         self.spawn_y = y
         self.speed = speed
         self.ai_mode = ai_mode
-        self.direction = 'front'  # 当前朝向
-        self.moving = False
+        # 初始随机方向，让敌人开始就游荡
+        self.direction = random.choice(['front', 'back', 'left', 'right'])
+        self.moving = True  # 开始就处于移动状态
         
         # 动画相关
         self.sprites = {}
@@ -41,9 +42,9 @@ class Enemy:
         self.animation_counter = 0
         
         # AI相关
-        self.direction_change_timer = 0  # 随机AI的方向切换计时器
+        self.direction_change_timer = random.randint(0, 30)  # 随机初始计时器，让敌人不同步
         self.direction_change_interval = 60  # 每60帧切换一次方向
-        self.chase_update_timer = 0  # 追逐AI的更新计时器
+        self.chase_update_timer = random.randint(0, 10)  # 随机初始计时器
         self.chase_update_interval = 20 if ai_mode == 'chase' else 10  # chase模式每20帧更新一次路径，fast_chase每10帧
         
         # 加载敌人资产
@@ -182,17 +183,26 @@ class Enemy:
         self.moving = moved
     
     def move_chase(self, player, level_map):
-        """追踪玩家AI（有思考延迟）"""
+        """追踪玩家AI（有思考延迟，远距离游荡）"""
+        # 计算到玩家的距离
+        dx = player.x - self.x
+        dy = player.y - self.y
+        distance = (dx ** 2 + dy ** 2) ** 0.5
+        
+        # 设置追踪距离阈值（以像素为单位）
+        chase_distance = TILE_SIZE * 8  # 8格以内才开始追踪
+        
+        # 如果玩家距离太远，使用游荡模式
+        if distance > chase_distance:
+            self.move_random(level_map)
+            return
+        
         # 更新追踪计时器
         self.chase_update_timer += 1
         
         # 只在特定帧数更新追踪方向（不是每帧都追）
         if self.chase_update_timer >= self.chase_update_interval:
             self.chase_update_timer = 0
-            
-            # 计算到玩家的方向
-            dx = player.x - self.x
-            dy = player.y - self.y
             
             # 选择优先移动方向（曼哈顿距离）
             if abs(dx) > abs(dy):
@@ -255,15 +265,16 @@ class Enemy:
         screen.blit(sprite, (self.x, self.y))
     
     def reset_position(self):
-        """重置到出生点"""
+        """重置到出生点（重置后继续游荡）"""
         self.x = self.spawn_x * TILE_SIZE
         self.y = self.spawn_y * TILE_SIZE
         self.rect.x = self.x
         self.rect.y = self.y
-        self.direction = 'front'
-        self.moving = False
+        # 随机新的方向，继续游荡
+        self.direction = random.choice(['front', 'back', 'left', 'right'])
+        self.moving = True
         self.current_frame = 0
-        self.direction_change_timer = 0
+        self.direction_change_timer = random.randint(0, 30)
     
     def check_collision_with_player(self, player):
         """检查是否与玩家碰撞"""

@@ -171,7 +171,7 @@ class Player:
     
     def move(self, dx, dy, level_map):
         """
-        移动玩家
+        移动玩家（优化转弯流畅度）
         Args:
             dx: x方向的移动增量（-1, 0, 1）
             dy: y方向的移动增量（-1, 0, 1）
@@ -187,18 +187,45 @@ class Player:
         elif dy < 0:
             self.direction = 'back'
         
+        # 转弯自动对齐功能（让转弯更丝滑）
+        alignment_threshold = 6  # 对齐阈值（像素）
+        
+        # 如果从水平方向转向垂直方向
+        if dy != 0 and dx == 0:
+            # 计算当前位置相对于网格中心的偏移
+            grid_center_x = (self.x // TILE_SIZE) * TILE_SIZE + TILE_SIZE // 2
+            offset_x = self.x + TILE_SIZE // 2 - grid_center_x
+            
+            # 如果偏移不大，自动对齐到中心
+            if abs(offset_x) <= alignment_threshold:
+                self.x = grid_center_x - TILE_SIZE // 2
+                self.rect.x = self.x
+        
+        # 如果从垂直方向转向水平方向
+        if dx != 0 and dy == 0:
+            # 计算当前位置相对于网格中心的偏移
+            grid_center_y = (self.y // TILE_SIZE) * TILE_SIZE + TILE_SIZE // 2
+            offset_y = self.y + TILE_SIZE // 2 - grid_center_y
+            
+            # 如果偏移不大，自动对齐到中心
+            if abs(offset_y) <= alignment_threshold:
+                self.y = grid_center_y - TILE_SIZE // 2
+                self.rect.y = self.y
+        
         # 计算新位置
         new_x = self.x + dx * self.speed
         new_y = self.y + dy * self.speed
         
         # 分别检测x和y方向的碰撞（滑墙效果）
+        moved = False
+        
         # 先尝试只在x方向移动
         if dx != 0:
             test_rect = pygame.Rect(new_x, self.y, TILE_SIZE, TILE_SIZE)
             if not self.check_collision(test_rect, level_map):
                 self.x = new_x
                 self.rect.x = self.x
-                self.moving = True
+                moved = True
         
         # 再尝试只在y方向移动
         if dy != 0:
@@ -206,12 +233,9 @@ class Player:
             if not self.check_collision(test_rect, level_map):
                 self.y = new_y
                 self.rect.y = self.y
-                self.moving = True
+                moved = True
         
-        # 如果两个方向都没动，设置为不移动
-        if dx != 0 or dy != 0:
-            if self.x == self.rect.x and self.y == self.rect.y:
-                self.moving = False
+        self.moving = moved
     
     def check_collision(self, rect, level_map):
         """
