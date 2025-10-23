@@ -2,6 +2,12 @@
 
 SlimeGobble is a Pac-Man-like game with three independent levels. Players need to control the cute slime "Mumu" to get higher scores. Please be careful of the evil "chaser"!
 
+## 🌐 Play Online
+
+**🎮 [Play in Browser](https://jake-yutong.github.io/SlimeGobble/)** *(Coming soon)*
+
+Or run locally on your computer (see below).
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -23,6 +29,12 @@ python main.py
 # Or use the quick start script
 ./run.sh
 ```
+
+### 🌐 Deploy to Web
+
+Want to share your game online? See:
+- **[Quick Deploy Guide](QUICK_DEPLOY.md)** - 5 minute setup
+- **[Full Deployment Guide](WEB_DEPLOYMENT.md)** - Detailed instructions
 
 ## 🎯 Controls
 

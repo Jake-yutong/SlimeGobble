@@ -44,8 +44,11 @@ COIN_SCORE = 10  # 小金币得分
 BIG_COIN_SCORE = 50  # 大金币得分
 LEVEL_UP_SCORE = 500  # 升级所需分数
 
-# 资产路径（用户本地路径）
-ASSETS_PATH = '/Users/liyutong/Desktop/assets'
+# 资产路径（使用相对路径，同时兼容本地和Web）
+import os
+# 获取当前文件所在目录
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ASSETS_PATH = os.path.join(_BASE_DIR, 'assets')
 
 # 地图符号定义
 WALL = 'W'
