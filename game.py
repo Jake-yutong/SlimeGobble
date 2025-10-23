@@ -530,3 +530,26 @@ class Game:
         
         # 退出游戏
         pygame.quit()
+
+    async def run_async(self):
+        """游戏主循环 - 异步版本用于Web部署"""
+        import asyncio
+        
+        while self.running:
+            # 处理事件
+            self.handle_events()
+            
+            # 更新游戏状态
+            self.update()
+            
+            # 绘制游戏画面
+            self.draw()
+            
+            # 控制帧率
+            self.clock.tick(FPS)
+            
+            # 让浏览器处理其他任务
+            await asyncio.sleep(0)
+        
+        # 退出游戏
+        pygame.quit()
