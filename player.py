@@ -191,18 +191,27 @@ class Player:
         new_x = self.x + dx * self.speed
         new_y = self.y + dy * self.speed
         
-        # 创建新位置的矩形用于碰撞检测
-        new_rect = pygame.Rect(new_x, new_y, TILE_SIZE, TILE_SIZE)
+        # 分别检测x和y方向的碰撞（滑墙效果）
+        # 先尝试只在x方向移动
+        if dx != 0:
+            test_rect = pygame.Rect(new_x, self.y, TILE_SIZE, TILE_SIZE)
+            if not self.check_collision(test_rect, level_map):
+                self.x = new_x
+                self.rect.x = self.x
+                self.moving = True
         
-        # 检查碰撞
-        if not self.check_collision(new_rect, level_map):
-            self.x = new_x
-            self.y = new_y
-            self.rect.x = self.x
-            self.rect.y = self.y
-            self.moving = True
-        else:
-            self.moving = False
+        # 再尝试只在y方向移动
+        if dy != 0:
+            test_rect = pygame.Rect(self.x, new_y, TILE_SIZE, TILE_SIZE)
+            if not self.check_collision(test_rect, level_map):
+                self.y = new_y
+                self.rect.y = self.y
+                self.moving = True
+        
+        # 如果两个方向都没动，设置为不移动
+        if dx != 0 or dy != 0:
+            if self.x == self.rect.x and self.y == self.rect.y:
+                self.moving = False
     
     def check_collision(self, rect, level_map):
         """

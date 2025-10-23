@@ -7,6 +7,7 @@ import pygame
 import os
 from config import *
 from player import Player
+from enemy import Enemy
 
 
 class Game:
@@ -42,7 +43,7 @@ class Game:
         
         # 游戏对象
         self.player = None
-        self.enemies = []  # 敌人列表（第一阶段暂不实现）
+        self.enemies = []  # 敌人列表
         
         # UI相关
         self.font_large = pygame.font.Font(None, 72)
@@ -51,6 +52,10 @@ class Game:
         
         # 加载资产
         self.load_assets()
+        
+        # 音效
+        self.sounds = {}
+        self.load_sounds()
         
         # 按钮（用于主菜单）
         self.start_button_rect = None
@@ -81,8 +86,56 @@ class Game:
             self.big_coin_image = pygame.Surface((TILE_SIZE, TILE_SIZE))
             self.big_coin_image.fill(RED)
         
-        # 音效加载（第一阶段暂时跳过，避免阻塞）
-        print("音效加载将在后续阶段实现")
+    def load_sounds(self):
+        """加载音效"""
+        # 初始化mixer
+        try:
+            pygame.mixer.init()
+        except:
+            print("警告：无法初始化音效系统")
+            return
+        
+        # 音效文件列表
+        sound_files = {
+            'coin': 'big coin.wav',  # 收集大金币音效
+            'bgm': 'bgm.wav',        # 背景音乐
+            'win': 'win.wav',        # 胜利音效
+            'tap': 'tap.wav',        # UI点击音效
+            'lose': 'lose.wav'       # 失败音效
+        }
+        
+        for name, filename in sound_files.items():
+            try:
+                sound_path = os.path.join(ASSETS_PATH, filename)
+                if name == 'bgm':
+                    # 背景音乐使用music模块
+                    pygame.mixer.music.load(sound_path)
+                    print(f"成功加载背景音乐: {filename}")
+                else:
+                    # 音效使用Sound对象
+                    self.sounds[name] = pygame.mixer.Sound(sound_path)
+                    print(f"成功加载音效: {filename}")
+            except Exception as e:
+                print(f"警告：无法加载音效 {filename}: {e}")
+    
+    def play_sound(self, sound_name):
+        """播放音效"""
+        if sound_name in self.sounds:
+            self.sounds[sound_name].play()
+    
+    def play_bgm(self):
+        """播放背景音乐（循环）"""
+        try:
+            pygame.mixer.music.play(-1)  # -1表示无限循环
+        except:
+            pass
+    
+    def stop_bgm(self):
+        """停止背景音乐"""
+        try:
+            pygame.mixer.music.stop()
+        except:
+            pass
     
     def load_level(self, level_index):
         """
@@ -126,10 +179,29 @@ class Game:
             print("警告：未找到玩家出生点，使用默认位置")
             self.player = Player(1, 1)
         
+        # 创建敌人
+        self.enemies = []
+        # 根据关卡确定AI模式和速度
+        if level_index == 0:
+            ai_mode = 'random'
+            speed = ENEMY_SPEED_LEVEL1
+        elif level_index == 1:
+            ai_mode = 'chase'
+            speed = ENEMY_SPEED_LEVEL2
+        else:
+            ai_mode = 'fast_chase'
+            speed = ENEMY_SPEED_LEVEL3
+        
+        for spawn_x, spawn_y in self.enemy_spawns:
+            enemy = Enemy(spawn_x, spawn_y, ai_mode, speed)
+            self.enemies.append(enemy)
+        
         print(f"关卡 {level_index + 1} 加载完成")
         print(f"  金币数量: {len(self.coins)}")
         print(f"  大金币数量: {len(self.big_coins)}")
         print(f"  敌人出生点数量: {len(self.enemy_spawns)}")
+        print(f"  敌人数量: {len(self.enemies)}")
+        print(f"  敌人AI模式: {ai_mode}")
     
     def start_game(self):
         """开始游戏"""
@@ -138,11 +210,15 @@ class Game:
         self.current_level = 0
         self.load_level(0)
         self.state = PLAYING
+        self.play_bgm()  # 开始播放背景音乐
         print("游戏开始！")
     
     def check_coin_collection(self):
         """检查玩家是否收集到金币"""
-        player_grid_pos = (self.player.x // TILE_SIZE, self.player.y // TILE_SIZE)
+        # 使用玩家中心点来判定，更精确
+        player_center_x = (self.player.x + TILE_SIZE // 2) // TILE_SIZE
+        player_center_y = (self.player.y + TILE_SIZE // 2) // TILE_SIZE
+        player_grid_pos = (player_center_x, player_center_y)
         
         # 检查普通金币
         if player_grid_pos in self.coins:
@@ -160,13 +236,38 @@ class Game:
             # 移除地图上的大金币
             x, y = player_grid_pos
             self.level_map[y][x] = EMPTY
+            self.play_sound('coin')  # 播放金币音效
             print(f"收集大金币！得分: {self.score}")
     
     def check_level_complete(self):
         """检查关卡是否完成"""
         if self.score >= LEVEL_UP_SCORE:
             self.state = LEVEL_COMPLETE
+            self.play_sound('win')  # 播放胜利音效
             print(f"关卡 {self.current_level + 1} 完成！")
+    
+    def check_enemy_collision(self):
+        """检查玩家与敌人的碰撞"""
+        for enemy in self.enemies:
+            if enemy.check_collision_with_player(self.player):
+                # 玩家被敌人碰到
+                self.lives -= 1
+                print(f"被敌人碰到！剩余生命: {self.lives}")
+                
+                if self.lives <= 0:
+                    # 游戏结束
+                    self.state = GAME_OVER
+                    self.stop_bgm()
+                    self.play_sound('lose')
+                    print("游戏结束！")
+                else:
+                    # 重置玩家和敌人位置
+                    if self.player_spawn:
+                        self.player.reset_position(self.player_spawn[0], self.player_spawn[1])
+                    for enemy in self.enemies:
+                        enemy.reset_position()
+                
+                break  # 一次只处理一个碰撞
     
     def update(self):
         """更新游戏状态"""
@@ -178,8 +279,15 @@ class Game:
             if self.player:
                 self.player.update(keys, self.level_map)
             
+            # 更新敌人
+            for enemy in self.enemies:
+                enemy.update(self.player, self.level_map)
+            
             # 检查金币收集
             self.check_coin_collection()
+            
+            # 检查敌人碰撞
+            self.check_enemy_collision()
             
             # 检查关卡完成
             self.check_level_complete()
@@ -225,8 +333,8 @@ class Game:
         """绘制主菜单"""
         self.screen.fill(BLACK)
         
-        # 绘制标题
-        title_text = self.font_large.render("SlimeGobble", True, GREEN)
+        # 绘制标题（浅蓝色）
+        title_text = self.font_large.render("SlimeGobble", True, LIGHT_BLUE)
         title_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, 150))
         self.screen.blit(title_text, title_rect)
         
@@ -258,6 +366,10 @@ class Game:
         # 绘制地图
         self.draw_map()
         
+        # 绘制敌人
+        for enemy in self.enemies:
+            enemy.draw(self.screen)
+        
         # 绘制玩家
         if self.player:
             self.player.draw(self.screen)
@@ -275,8 +387,59 @@ class Game:
         
         # 显示文字
         text = self.font_large.render("Level Complete!", True, YELLOW)
-        text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50))
         self.screen.blit(text, text_rect)
+        
+        # 显示提示
+        if self.current_level < len(LEVELS) - 1:
+            hint_text = self.font_small.render("Press SPACE to continue", True, WHITE)
+        else:
+            hint_text = self.font_small.render("Press SPACE for final level!", True, WHITE)
+        hint_rect = hint_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50))
+        self.screen.blit(hint_text, hint_rect)
+    
+    def draw_game_over(self):
+        """绘制游戏结束画面"""
+        self.screen.fill(BLACK)
+        
+        # 显示Game Over
+        title_text = self.font_large.render("GAME OVER", True, RED)
+        title_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, 150))
+        self.screen.blit(title_text, title_rect)
+        
+        # 显示最终分数
+        score_text = self.font_medium.render(f"Final Score: {self.score}", True, WHITE)
+        score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, 250))
+        self.screen.blit(score_text, score_rect)
+        
+        # 显示提示
+        hint_text = self.font_small.render("Press R to Restart or ESC for Menu", True, GRAY)
+        hint_rect = hint_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
+        self.screen.blit(hint_text, hint_rect)
+    
+    def draw_victory(self):
+        """绘制胜利画面"""
+        self.screen.fill(BLACK)
+        
+        # 显示Victory
+        title_text = self.font_large.render("VICTORY!", True, YELLOW)
+        title_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, 150))
+        self.screen.blit(title_text, title_rect)
+        
+        # 显示最终分数
+        score_text = self.font_medium.render(f"Final Score: {self.score}", True, WHITE)
+        score_rect = score_text.get_rect(center=(SCREEN_WIDTH // 2, 250))
+        self.screen.blit(score_text, score_rect)
+        
+        # 显示祝贺
+        congrats_text = self.font_small.render("Congratulations! You completed all levels!", True, GREEN)
+        congrats_rect = congrats_text.get_rect(center=(SCREEN_WIDTH // 2, 350))
+        self.screen.blit(congrats_text, congrats_rect)
+        
+        # 显示提示
+        hint_text = self.font_small.render("Press R to Play Again or ESC for Menu", True, GRAY)
+        hint_rect = hint_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
+        self.screen.blit(hint_text, hint_rect)
     
     def draw(self):
         """绘制游戏画面"""
@@ -286,6 +449,10 @@ class Game:
             self.draw_playing()
         elif self.state == LEVEL_COMPLETE:
             self.draw_level_complete()
+        elif self.state == GAME_OVER:
+            self.draw_game_over()
+        elif self.state == VICTORY:
+            self.draw_victory()
         
         # 更新显示
         pygame.display.flip()
@@ -299,6 +466,7 @@ class Game:
             # 主菜单中的点击事件
             if self.state == MAIN_MENU and event.type == pygame.MOUSEBUTTONDOWN:
                 if self.start_button_rect and self.start_button_rect.collidepoint(event.pos):
+                    self.play_sound('tap')  # 播放点击音效
                     self.start_game()
             
             # 按键事件
@@ -309,8 +477,28 @@ class Game:
                 elif event.key == pygame.K_p and self.state == PAUSED:
                     self.state = PLAYING
                 
+                # 关卡完成后按空格继续
+                if event.key == pygame.K_SPACE and self.state == LEVEL_COMPLETE:
+                    if self.current_level < len(LEVELS) - 1:
+                        # 进入下一关
+                        self.current_level += 1
+                        self.load_level(self.current_level)
+                        self.state = PLAYING
+                        print(f"进入关卡 {self.current_level + 1}")
+                    else:
+                        # 已完成所有关卡
+                        self.state = VICTORY
+                        self.stop_bgm()
+                        self.play_sound('win')
+                        print("恭喜通关！")
+                
+                # 重试功能
+                if event.key == pygame.K_r and self.state in [GAME_OVER, VICTORY]:
+                    self.start_game()
+                
                 # ESC返回主菜单
                 if event.key == pygame.K_ESCAPE:
+                    self.stop_bgm()
                     self.state = MAIN_MENU
     
     def run(self):

@@ -20,6 +20,7 @@ YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 GRAY = (128, 128, 128)
 DARK_GRAY = (50, 50, 50)
+LIGHT_BLUE = (100, 200, 255)  # 浅蓝色用于标题
 
 # 游戏状态
 MAIN_MENU = 'main_menu'
